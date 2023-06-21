@@ -1,0 +1,5 @@
+- 👋 Hi, I’m @tralv1612
+- 👀 I’m interested in Artifical Intelligence.
+- 🌱 I’m currently learning Machine learning, Deep learning, Data Scient, Computer Vision, NLP
+- 💞️ I’m looking to collaborate on Machine learning projects
+- 📫 reach me via tralv.1612@gmail.com
