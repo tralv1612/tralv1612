@@ -5,15 +5,15 @@ graph TD
         B -->|2. Gọi Facebook SDK| C[☁️ Facebook Server];
         C -->|3. Mở Popup Đăng nhập & Xin quyền| A;
         A -->|4. Đồng ý cấp quyền| C;
-        C -->|5. Trả về Token Ngắn hạn (User Access Token)| B;
+        C -->|5. Trả về Token Ngắn hạn &#40;User Access Token&#41;| B;
     end
 
     subgraph "Giai đoạn 2: Đổi Token & Lấy Dữ liệu (Backend)"
         B -->|6. Gửi Token Ngắn hạn đến Backend| D(⚙️ Backend - Server của bạn);
         D -->|7. Gửi Token Ngắn hạn + App Secret| C;
-        C -->|8. Trả về Token Dài hạn (User Access Token)| D;
+        C -->|8. Trả về Token Dài hạn &#40;User Access Token&#41;| D;
         D -->|9. Dùng Token Dài hạn gọi API lấy Pages| C;
-        C -->|10. Trả về Danh sách Pages (chứa Page Access Token)| D;
+        C -->|10. Trả về Danh sách Pages &#40;chứa Page Access Token&#41;| D;
     end
 
     subgraph "Giai đoạn 3: Lưu trữ & Hoàn tất"
