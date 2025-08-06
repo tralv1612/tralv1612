@@ -1,30 +1,30 @@
 ```mermaid
-graph TD
-    subgraph "Giai đoạn 1: Xác thực & Lấy Token Ngắn hạn<br>(Frontend)"
-        A[👨‍💻 Người dùng] -->|1: Nhấn nút &quot;Đăng nhập&quot;| B(🌐 Frontend - Trình duyệt);
-        B -->|2: Gọi Facebook SDK| C[☁️ Facebook Server];
-        C -->|3: Mở Popup Đăng nhập & Xin quyền| A;
-        A -->|4: Đồng ý cấp quyền| C;
-        C -->|5: Trả về Token Ngắn hạn &#40;User Access Token&#41;| B;
-    end
+sequenceDiagram
+    participant Frontend as Frontend (Trình duyệt)
+    participant Facebook as Facebook API
+    participant Backend as Backend (Server của bạn)
+    participant Database as CSDL của bạn
 
-    subgraph "Giai đoạn 2: Đổi Token & Lấy Dữ liệu<br>(Backend)"
-        B -->|6: Gửi Token Ngắn hạn đến Backend| D(⚙️ Backend - Server của bạn);
-        D -->|7: Gửi Token Ngắn hạn + App Secret| C;
-        C -->|8: Trả về Token Dài hạn &#40;User Access Token&#41;| D;
-        D -->|9: Dùng Token Dài hạn gọi API lấy Pages| C;
-        C -->|10: Trả về Danh sách Pages &#40;chứa Page Access Token&#41;| D;
-    end
+    Note right of Frontend: Luồng bắt đầu khi người dùng nhấn nút đăng nhập
 
-    subgraph "Giai đoạn 3: Lưu trữ & Hoàn tất"
-        D -->|11: Xử lý & Bóc tách dữ liệu| E[💾 Cơ sở dữ liệu];
-        E -->|12: Lưu trữ các thông tin quan trọng| E;
-        D -->|13: Gửi tín hiệu thành công về Frontend| B;
-        B -->|14: Hiển thị thông báo &quot;Hoàn tất!&quot;| A;
-    end
+    %% --- Giai đoạn 1: Lấy Token Ngắn hạn ---
+    Frontend->>Facebook: 1. Gọi FB.login()
+    Facebook-->>Frontend: 2. Trả về Token Ngắn hạn
 
-    style A fill:#e3f2fd
-    style B fill:#e3f2fd
-    style D fill:#e8f5e9
-    style E fill:#e8f5e9
+    %% --- Giai đoạn 2: Đổi Token qua Backend ---
+    Frontend->>Backend: 3. POST /exchange-token (gửi Token Ngắn hạn)
+    Note over Backend,Facebook: Backend thực hiện các lệnh gọi an toàn
+    Backend->>Facebook: 4. Gọi API đổi Token (kèm App Secret)
+    Facebook-->>Backend: 5. Trả về Token Dài hạn
+
+    %% --- Giai đoạn 3: Lấy dữ liệu Trang (Pages) ---
+    Backend->>Facebook: 6. Gọi API /me/accounts (dùng Token Dài hạn)
+    Facebook-->>Backend: 7. Trả về Danh sách Pages (chứa Page Access Token)
+
+    %% --- Giai đoạn 4: Lưu trữ ---
+    Backend->>Database: 8. Lưu các thông tin quan trọng
+    Note over Backend,Database: page_id, page_name,<br/>page_access_token,<br/>user_access_token (dài hạn)
+
+    %% --- Giai đoạn 5: Hoàn tất ---
+    Backend-->>Frontend: 9. Trả về tín hiệu thành công
 ```
