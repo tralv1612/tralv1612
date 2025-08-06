@@ -1,6 +1,6 @@
 ```mermaid
 graph TD
-    subgraph "Giai đoạn 1: Xác thực & Lấy Token Ngắn hạn (Frontend)"
+    subgraph "Giai đoạn 1: Xác thực & Lấy Token Ngắn hạn<br>(Frontend)"
         A[👨‍💻 Người dùng] -->|1: Nhấn nút &quot;Đăng nhập&quot;| B(🌐 Frontend - Trình duyệt);
         B -->|2: Gọi Facebook SDK| C[☁️ Facebook Server];
         C -->|3: Mở Popup Đăng nhập & Xin quyền| A;
@@ -8,7 +8,7 @@ graph TD
         C -->|5: Trả về Token Ngắn hạn &#40;User Access Token&#41;| B;
     end
 
-    subgraph "Giai đoạn 2: Đổi Token & Lấy Dữ liệu (Backend)"
+    subgraph "Giai đoạn 2: Đổi Token & Lấy Dữ liệu<br>(Backend)"
         B -->|6: Gửi Token Ngắn hạn đến Backend| D(⚙️ Backend - Server của bạn);
         D -->|7: Gửi Token Ngắn hạn + App Secret| C;
         C -->|8: Trả về Token Dài hạn &#40;User Access Token&#41;| D;
