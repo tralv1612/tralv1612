@@ -1,30 +1,22 @@
 ```mermaid
 sequenceDiagram
-    participant Frontend as Frontend (Trình duyệt)
+    participant Customer as Trang Khách hàng (customer1.myapp.com)
+    participant iFrame as iFrame ẩn (trỏ đến auth.myapp.com)
     participant Facebook as Facebook API
-    participant Backend as Backend (Server của bạn)
-    participant Database as CSDL của bạn
 
-    Note right of Frontend: Luồng bắt đầu khi người dùng nhấn nút đăng nhập
+    Note over Customer, iFrame: Người dùng đang ở trang của khách hàng
 
-    %% --- Giai đoạn 1: Lấy Token Ngắn hạn ---
-    Frontend->>Facebook: 1. Gọi FB.login()
-    Facebook-->>Frontend: 2. Trả về Token Ngắn hạn
+    Customer->>Customer: 1. Người dùng nhấn nút "Đăng nhập với Facebook"
 
-    %% --- Giai đoạn 2: Đổi Token qua Backend ---
-    Frontend->>Backend: 3. POST /exchange-token (gửi Token Ngắn hạn)
-    Note over Backend,Facebook: Backend thực hiện các lệnh gọi an toàn
-    Backend->>Facebook: 4. Gọi API đổi Token (kèm App Secret)
-    Facebook-->>Backend: 5. Trả về Token Dài hạn
+    Note over Customer, iFrame: Trang khách hàng gửi tín hiệu cho iFrame ẩn
+    Customer->>iFrame: 2. Gửi tin nhắn: { action: 'start-login' }
 
-    %% --- Giai đoạn 3: Lấy dữ liệu Trang (Pages) ---
-    Backend->>Facebook: 6. Gọi API /me/accounts (dùng Token Dài hạn)
-    Facebook-->>Backend: 7. Trả về Danh sách Pages (chứa Page Access Token)
+    Note over iFrame, Facebook: iFrame (trên domain đã đăng ký) gọi SDK
+    iFrame->>Facebook: 3. Gọi FB.login()
+    Facebook-->>iFrame: 4. Trả về authResponse (chứa Access Token)
 
-    %% --- Giai đoạn 4: Lưu trữ ---
-    Backend->>Database: 8. Lưu các thông tin quan trọng
-    Note over Backend,Database: page_id, page_name,<br/>page_access_token,<br/>user_access_token (dài hạn)
+    Note over iFrame, Customer: iFrame gửi kết quả về cho trang cha
+    iFrame->>Customer: 5. Gửi tin nhắn: { success: true, token: 'EAAC...' }
 
-    %% --- Giai đoạn 5: Hoàn tất ---
-    Backend-->>Frontend: 9. Trả về tín hiệu thành công
+    Customer->>Customer: 6. Nhận token, hoàn tất đăng nhập
 ```
